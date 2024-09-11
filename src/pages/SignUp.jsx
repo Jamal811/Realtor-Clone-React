@@ -50,6 +50,7 @@ const SignUp = () => {
       navigate("/");
     } catch (error) {
       toast.error("Something went wrong with the registration");
+      console.log(error);
     }
   };
   return (
