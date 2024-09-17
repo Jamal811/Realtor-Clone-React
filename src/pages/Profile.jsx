@@ -1,6 +1,14 @@
 import { getAuth, updateProfile } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
-import { useState } from "react";
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db } from "../firebase";
@@ -10,6 +18,7 @@ function Profile() {
   const auth = getAuth();
   const navigate = useNavigate();
   const [changeDetail, setChangeDetail] = useState(false);
+  const [listing, setListing] = useState(null);
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
@@ -47,6 +56,26 @@ function Profile() {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const fetchUserListings = async () => {
+      const listingRef = collection(db, "listings");
+      const q = query(listingRef, where("userRef", "==", auth.currentUser.uid));
+      orderBy("timestamp", "desc");
+      const querySnap = await getDocs(q);
+      let listings = [];
+      querySnap.forEach((doc) => {
+        return listings.push({
+          id: doc.id,
+          data: doc.data,
+        });
+      });
+      setListing(listings);
+    };
+
+    fetchUserListings();
+  }, [auth.currentUser.uid]);
+
   return (
     <>
       <section className="flex justify-center items-center flex-col max-w-6xl mx-auto">
@@ -107,6 +136,13 @@ function Profile() {
           </button>
         </div>
       </section>
+      <div>
+        {listings.length > 0 && (
+          <>
+            <h2>My Listings</h2>
+          </>
+        )}
+      </div>
     </>
   );
 }
