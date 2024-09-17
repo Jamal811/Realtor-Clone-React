@@ -41,6 +41,7 @@ const Header = () => {
                   ? "text-black border-b-[3px] border-b-red-500"
                   : ""
               }`}
+              onClick={() => navigate("/")}
             >
               Home
             </li>
