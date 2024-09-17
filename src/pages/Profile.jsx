@@ -13,12 +13,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db } from "../firebase";
 import { FcHome } from "react-icons/fc";
+import ListingItem from "../components/ListingItem";
 
 function Profile() {
   const auth = getAuth();
   const navigate = useNavigate();
   const [changeDetail, setChangeDetail] = useState(false);
-  const [listing, setListing] = useState(null);
+  const [listings, setListings] = useState(null);
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
@@ -58,21 +59,23 @@ function Profile() {
   };
 
   useEffect(() => {
-    const fetchUserListings = async () => {
+    async function fetchUserListings() {
       const listingRef = collection(db, "listings");
-      const q = query(listingRef, where("userRef", "==", auth.currentUser.uid));
-      orderBy("timestamp", "desc");
+      const q = query(
+        listingRef,
+        where("userRef", "==", auth.currentUser.uid),
+        orderBy("timestamp", "desc")
+      );
       const querySnap = await getDocs(q);
       let listings = [];
       querySnap.forEach((doc) => {
         return listings.push({
           id: doc.id,
-          data: doc.data,
+          data: doc.data(),
         });
       });
-      setListing(listings);
-    };
-
+      setListings(listings);
+    }
     fetchUserListings();
   }, [auth.currentUser.uid]);
 
@@ -136,10 +139,23 @@ function Profile() {
           </button>
         </div>
       </section>
-      <div>
-        {listings.length > 0 && (
+      <div className="max-w-6xl px-3 mt-6 mx-auto">
+        {listings?.length > 0 && (
           <>
-            <h2>My Listings</h2>
+            <h2 className="text-2xl text-center font-semibold mb-6">
+              My Listings
+            </h2>
+            <ul className="">
+              {listings.map((listing) => (
+                <ListingItem
+                  key={listing.id}
+                  id={listing.id}
+                  listing={listing.data}
+                  // onDelete={() => onDelete(listing.id)}
+                  // onEdit={() => onEdit(listing.id)}
+                />
+              ))}
+            </ul>
           </>
         )}
       </div>
