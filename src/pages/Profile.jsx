@@ -79,6 +79,9 @@ function Profile() {
     fetchUserListings();
   }, [auth.currentUser.uid]);
 
+  const onDelete = () => {};
+  const onEdit = () => {};
+
   return (
     <>
       <section className="flex justify-center items-center flex-col max-w-6xl mx-auto">
@@ -151,8 +154,8 @@ function Profile() {
                   key={listing.id}
                   id={listing.id}
                   listing={listing.data}
-                  // onDelete={() => onDelete(listing.id)}
-                  // onEdit={() => onEdit(listing.id)}
+                  onDelete={() => onDelete(listing.id)}
+                  onEdit={() => onEdit(listing.id)}
                 />
               ))}
             </ul>

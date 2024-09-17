@@ -2,7 +2,7 @@ import moment from "moment";
 import { MdLocationOn } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-const ListingItem = ({ listing, id }) => {
+const ListingItem = ({ listing, id, onDelete, onEdit }) => {
   const timestamp = listing.timestamp ? listing.timestamp.toDate() : null;
 
   return (
