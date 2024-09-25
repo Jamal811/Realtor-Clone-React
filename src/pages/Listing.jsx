@@ -69,6 +69,10 @@ const Listing = () => {
           Link copied{" "}
         </p>
       )}
+      <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg bg-white lg:space-x-5">
+        <div className="bg-pink-300 w-full h-[200px] lg-[400px]"></div>
+        <div className="bg-blue-300 w-full h-[200px] lg-[400px] z-10 overflow-x-hidden"></div>
+      </div>
     </main>
   );
 };
