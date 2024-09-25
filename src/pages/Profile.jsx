@@ -1,6 +1,7 @@
 import { getAuth, updateProfile } from "firebase/auth";
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   orderBy,
@@ -79,8 +80,19 @@ function Profile() {
     fetchUserListings();
   }, [auth.currentUser.uid]);
 
-  const onDelete = () => {};
-  const onEdit = () => {};
+  const onDelete = async (listingID) => {
+    if (window.confirm("Are you sure you want to delete?")) {
+      await deleteDoc(doc(db, "listings", listingID));
+      const updateListings = listings.filter(
+        (listing) => listing.id !== listingID
+      );
+      setListings(updateListings);
+      toast.success("Successfully deleted the listing");
+    }
+  };
+  const onEdit = (listingID) => {
+    navigate(`/edit-listing/${listingID}`);
+  };
 
   return (
     <>
