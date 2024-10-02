@@ -79,7 +79,7 @@ const Listing = () => {
       </div>
       {sharedLinkCopied && (
         <p className="fixed top-[23%] right-[5%] z-10 bg-white font-semibold border-2 border-gray-400 rounded-md p-2">
-          Link copied{" "}
+          Link copied
         </p>
       )}
       <div className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg bg-white lg:space-x-5">
