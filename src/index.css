@@ -21,3 +21,10 @@ html::-webkit-scrollbar {
 html {
   scrollbar-width: none;
 }
+html::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+}
