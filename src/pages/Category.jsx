@@ -110,7 +110,12 @@ const Category = () => {
           )}
         </>
       ) : (
-        <p>There is no current offers</p>
+        <p>
+          There is no current{" "}
+          {params.categoryName === "rent"
+            ? "Places for rent"
+            : "Places for sale"}
+        </p>
       )}
     </div>
   );
