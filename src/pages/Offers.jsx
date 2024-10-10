@@ -4,6 +4,7 @@ import {
   limit,
   orderBy,
   query,
+  startAfter,
   where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -47,6 +48,34 @@ const Offers = () => {
     fetchListings();
   }, []);
 
+  const onFetchMoreListings = async () => {
+    try {
+      const listingRef = collection(db, "listings");
+      const q = query(
+        listingRef,
+        where("offer", "==", true),
+        orderBy("timestamp", "desc"),
+        startAfter(lastFetchListing),
+        limit(4)
+      );
+      const querySnap = await getDocs(q);
+      const lastVisible = querySnap.docs[querySnap.docs.length - 1];
+      setLastFetchListing(lastVisible);
+      const listings = [];
+      querySnap.forEach((doc) => {
+        return listings.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+      });
+      setListings((prevState) => [...prevState, ...listings]);
+      setLoading(false);
+    } catch (error) {
+      toast.error("Could not fetch listings");
+      console.log(error);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-3">
       <h1 className="text-3xl text-center mt-6 font-bold mb-6">Offers</h1>
@@ -65,6 +94,16 @@ const Offers = () => {
               ))}
             </ul>
           </main>
+          {lastFetchListing && (
+            <div className="flex justify-center items-center">
+              <button
+                onClick={onFetchMoreListings}
+                className="bg-white px-3 py-1.5 text-gray-700 border border-gray-300 mb-6 mt-6 hover:border-slate-600 rounded transition duration-150 ease-in-out"
+              >
+                Load more
+              </button>
+            </div>
+          )}
         </>
       ) : (
         <p>There is no current offers</p>
